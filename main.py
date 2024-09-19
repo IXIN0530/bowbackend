@@ -77,7 +77,9 @@ def get_wait_time(shop:Shop):
   nowTime=info.find("div",{"class","update-time"}).text.split("現")[0]
   groups=info.find_all("dd")[0].text.replace("\u2002","").split("組")[0]
   waitTime=info.find_all("dd")[1].text.replace("\u2002","").split("分")[0].split("約")[1]
-
+  
+  if(groups=="1"and waitTime=="5"):
+      return ["false","false","false"]
   return [nowTime,groups,waitTime]
 
 #以下、スコアの取得
