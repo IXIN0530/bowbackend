@@ -9,6 +9,7 @@ from urllib3.util import create_urllib3_context
 from urllib3 import PoolManager
 from requests.adapters import HTTPAdapter
 from requests import Session
+import requests
 import ssl
 
 app=FastAPI()
@@ -59,6 +60,21 @@ class Login(BaseModel):
     id2:int
     id3:int
     password:str
+
+#待ち時間の取得
+@app.post("/waitTime")
+def get_wait_time(shop_id:str):
+  url=f"https://www.round1.co.jp/yoyaku/queue/bowling/index.php?service_department_id=1&store_id={shop_id}"
+  response=requests.get(url)
+  soup=BeautifulSoup(response.content,"html.parser")
+
+  info=soup.find("div",{"class","form_append"})
+
+  nowTime=info.find("div",{"class","update-time"}).text.split("現")[0]
+  groups=info.find_all("dd")[0].text.replace("\u2002","").split("組")[0]
+  waitTime=info.find_all("dd")[1].text.replace("\u2002","").split("分")[0].split("約")[1]
+
+  return [nowTime,groups,waitTime]
 
 #以下、スコアの取得
 @app.post("/login")
