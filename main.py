@@ -61,9 +61,13 @@ class Login(BaseModel):
     id3:int
     password:str
 
+class Shop(BaseModel):
+    shop_id:str
+
 #待ち時間の取得
 @app.post("/waitTime")
-def get_wait_time(shop_id:str):
+def get_wait_time(shop:Shop):
+  shop_id=shop.shop_id
   url=f"https://www.round1.co.jp/yoyaku/queue/bowling/index.php?service_department_id=1&store_id={shop_id}"
   response=requests.get(url)
   soup=BeautifulSoup(response.content,"html.parser")
